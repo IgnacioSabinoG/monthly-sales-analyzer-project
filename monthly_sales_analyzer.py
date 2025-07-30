@@ -24,27 +24,99 @@ sales_data = [
 
 def total_sales_by_product(data, product_key):
     """Calculates the total sales of a specific product in 30 days."""
-    pass
-
+    total = 0
+    for sale in data:
+        total += sale[product_key] 
+    return total
+    
 
 def average_daily_sales(data, product_key):
     """Calculates the average daily sales of a specific product."""
-    pass
+    total = 0
+    n = 0
+    for sale in data:
+        total += sale[product_key]
+        n += 1
+    Aver = total/n
+    return Aver
 
 
 def best_selling_day(data):
     """Finds the day with the highest total sales."""
-    pass
+    high = 0
+    best_day = None
+    for sale in data:
+        total_day = sale["product_a"]+sale["product_b"]+sale["product_c"]
+        if total_day > high:
+            high = total_day
+            best_day = sale["day"]
+    return best_day
 
 
 def days_above_threshold(data, product_key, threshold):
     """Counts how many days the sales of a product exceeded a given threshold."""
-    pass
+    count = 0
+    for sale in data:
+        if sale[product_key] > threshold:
+            count += 1
+    return count
 
 
 def top_product(data):
     """Determines which product had the highest total sales in 30 days."""
-    pass
+    total_a = 0
+    total_b = 0
+    total_c = 0
+    for sale in data:
+        total_a += sale["product_a"]
+        total_b += sale["product_b"]
+        total_c += sale["product_c"]
+    highest = total_a
+    best_prod = "product_a"
+    if total_b > highest:
+        highest = total_b
+        best_product = "product_b"
+    if total_c > highest:
+        highest = total_c
+        best_product = "product_c"
+    return best_product
+
+
+# Agrega una función para encontrar el día con las peores ventas
+def worst_selling_day(data):
+    low = data[0]["product_a"] + data[0]["product_b"] + data[0]["product_c"]
+    worst_day = data[0]["day"]
+    for sale in data:
+        total_day = sale["product_a"]+sale["product_b"]+sale["product_c"]
+        if total_day < low:
+            low = total_day
+            worst_day = sale["day"]
+    return worst_day
+
+
+# Ordena los días por ventas totales y muestra los 3 mejores.
+def top_three_days(data):
+    daily_totals = [(sale["day"], sale["product_a"] + sale["product_b"] + sale["product_c"]) for sale in data]
+    daily_totals_copy = daily_totals[:]
+    for i in range(len(daily_totals_copy)):
+        for j in range(i + 1, len(daily_totals_copy)):
+            if daily_totals_copy[j][1] > daily_totals_copy[i][1]:
+                daily_totals_copy[i], daily_totals_copy[j] = daily_totals_copy[j], daily_totals_copy[i]
+    top_3 = daily_totals_copy[:3]
+    return top_3
+
+
+# Calcula el rango (máximo - mínimo) de las ventas de un producto.
+def min_max_product(data,product_key):
+    min = data[0][product_key]
+    max = 0
+    for sale in data:
+        if min > sale[product_key]:
+            min = sale[product_key]
+    for sale in data:
+        if max < sale[product_key]:
+            max = sale[product_key]
+    return min, max
 
 
 
@@ -54,3 +126,7 @@ print("Average daily sales of product_b:", average_daily_sales(sales_data, "prod
 print("Day with highest total sales:", best_selling_day(sales_data))
 print("Days when product_c exceeded 300 sales:", days_above_threshold(sales_data, "product_c", 300))
 print("Product with highest total sales:", top_product(sales_data))
+# New funtions
+print("Day with the lowest total sales:", worst_selling_day(sales_data))
+print("Best sales days:", top_three_days(sales_data))
+print("Minimum and maximun sales of product_b:", min_max_product(sales_data,"product_b"))
